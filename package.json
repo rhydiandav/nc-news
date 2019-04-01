@@ -8,9 +8,8 @@
     "migrate-make": "knex migrate:make",
     "migrate-latest": "knex migrate:latest",
     "migrate-rollback": "knex migrate:rollback",
-    "test": "npm run seed-test && mocha ./spec/*.spec.js",
+    "test": "mocha ./spec/*.spec.js",
     "seed": "knex seed:run",
-    "seed-test": "NODE_ENV=test knex seed:run",
     "dev": "nodemon listen.js",
     "start": "node listen.js"
   },

@@ -8,18 +8,28 @@ const connection = require('../db/connection');
 
 const request = supertest(app);
 
-describe('/', () => {
-  // beforeEach(() => connection.seed.run());
+describe.only('/', () => {
+  beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
 
   describe('/api', () => {
-    it('GET status:200', () => {
-      return request
-        .get('/api')
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.ok).to.equal(true);
-        });
+    describe('/topics', () => {
+      it('GET status:200 serves up an array of topic objects, with slug and description properties', () => {
+        return request
+          .get('/api/topics')
+          .expect(200)
+          .then(res => {
+            expect(res.body.topics[0].description).to.equal(
+              'The man, the Mitch, the legend'
+            );
+            expect(res.body.topics[0].slug).to.equal('mitch');
+          });
+      });
+    });
+    describe('/articles', () => {
+      it('GET status:200 serves up an array of article objects', () => {
+        return request.get('/api/articles').expect(200);
+      });
     });
   });
 });
