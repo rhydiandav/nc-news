@@ -3,10 +3,10 @@ exports.up = function(connection, Promise) {
     articlesTable.increments('article_id').primary();
     articlesTable.string('title').notNullable();
     articlesTable.string('body', 2000).notNullable();
-    articlesTable.integer('votes').defaultTo(0); // needs to default to 0
+    articlesTable.integer('votes').defaultTo(0);
     articlesTable.string('topic').references('topics.slug');
     articlesTable.string('author').references('users.username');
-    articlesTable.date('created_at').defaultTo(connection.fn.now()); // default to current date, need to test
+    articlesTable.date('created_at').defaultTo(connection.fn.now());
   });
 };
 

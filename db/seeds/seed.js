@@ -4,7 +4,7 @@ const {
   topicsData,
   usersData
 } = require('../data');
-const { formatArticles } = require('../../utils/seed-helpers');
+const { formatArticles, formatComments } = require('../../utils/seed-helpers');
 
 exports.seed = (connection, Promise) => {
   return connection.migrate
@@ -17,8 +17,17 @@ exports.seed = (connection, Promise) => {
       return connection.insert(usersData).into('users');
     })
     .then(() => {
-      formatArticles(articlesData);
-      return connection.insert(articlesData).into('articles');
+      const formattedArticles = formatArticles(articlesData);
+      return connection
+        .insert(formattedArticles)
+        .into('articles')
+        .returning('*');
     })
-    .then(() => {});
+    .then(articles => {
+      const formattedComments = formatComments(commentsData, articles);
+      return connection.insert(formattedComments).into('comments');
+    })
+    .then(() => {
+      console.log('import complete');
+    });
 };

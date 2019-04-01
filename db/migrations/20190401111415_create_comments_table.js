@@ -9,9 +9,9 @@ exports.up = function(connection, Promise) {
       .integer('article_id')
       .references('articles.article_id')
       .notNullable();
-    commentsTable.integer('votes').defaultTo(0); // needs to default to 0
-    commentsTable.date('created_at').defaultTo(connection.fn.now()); // default to current date, need to test
-    commentsTable.string('body').notNullable();
+    commentsTable.integer('votes').defaultTo(0);
+    commentsTable.date('created_at').defaultTo(connection.fn.now());
+    commentsTable.string('body', 2000).notNullable();
   });
 };
 
