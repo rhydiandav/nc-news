@@ -28,7 +28,12 @@ describe.only('/', () => {
     });
     describe('/articles', () => {
       it('GET status:200 serves up an array of article objects', () => {
-        return request.get('/api/articles').expect(200);
+        return request
+          .get('/api/articles')
+          .expect(200)
+          .then(res => {
+            console.log(res.body.articles);
+          });
       });
     });
   });
