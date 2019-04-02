@@ -84,5 +84,15 @@ describe.only('/', () => {
           });
       });
     });
+    describe('/articles/:article_id', () => {
+      it('GET status:200 should accept article id as a parametric endpoint', () => {
+        return request
+          .get('/api/articles/1')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles.length).to.equal(1);
+          });
+      });
+    });
   });
 });
