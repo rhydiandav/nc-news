@@ -141,5 +141,44 @@ describe.only('/', () => {
           });
       });
     });
+    describe('/articles/:article_id/comments', () => {
+      it('GET status:200 should respond with an array of comments for the given article id', () => {
+        return request
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(res => {
+            expect(res.body.comments).to.be.an('array');
+            expect(res.body.comments.length).to.equal(13);
+            expect(res.body.comments[0]).to.have.keys(
+              'comment_id',
+              'votes',
+              'created_at',
+              'author',
+              'body'
+            );
+            expect(res.body.comments[0].comment_id).to.equal(2);
+          });
+      });
+      it('GET status:200 should allow sort_by query', () => {
+        return request
+          .get('/api/articles/1/comments?sort_by=author')
+          .expect(200)
+          .then(res => {
+            expect(res.body.comments).to.be.an('array');
+            expect(res.body.comments.length).to.equal(13);
+            expect(res.body.comments[0].author).to.equal('icellusedkars');
+          });
+      });
+      it('GET status:200 should allow order query', () => {
+        return request
+          .get('/api/articles/1/comments?sort_by=author&order=asc')
+          .expect(200)
+          .then(res => {
+            expect(res.body.comments).to.be.an('array');
+            expect(res.body.comments.length).to.equal(13);
+            expect(res.body.comments[0].author).to.equal('butter_bridge');
+          });
+      });
+    });
   });
 });

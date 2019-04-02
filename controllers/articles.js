@@ -2,7 +2,8 @@ const {
   fetchAllArticles,
   fetchArticleById,
   updateArticle,
-  removeArticle
+  removeArticle,
+  fetchComments
 } = require('../models/articles');
 
 exports.getAllArticles = (req, res, next) => {
@@ -37,5 +38,13 @@ exports.deleteArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   removeArticle(article_id).then(() => {
     res.status(204).send();
+  });
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  const { sort_by, order } = req.query;
+  fetchComments(article_id, sort_by, order).then(comments => {
+    res.status(200).send({ comments });
   });
 };
