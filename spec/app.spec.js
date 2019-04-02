@@ -248,5 +248,20 @@ describe.only('/', () => {
           });
       });
     });
+    describe('/users/:username', () => {
+      it('GET status:200 should serve up a username object', () => {
+        return request
+          .get('/api/users/icellusedkars')
+          .expect(200)
+          .then(res => {
+            expect(res.body.user[0]).to.have.keys(
+              'username',
+              'avatar_url',
+              'name'
+            );
+            expect(res.body.user[0].name).to.equal('sam');
+          });
+      });
+    });
   });
 });

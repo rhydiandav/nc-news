@@ -1,3 +1,4 @@
+const { methodNotAllowed } = require('../errors');
 const {
   getCommentById,
   patchComment,
@@ -9,6 +10,7 @@ commentsRouter
   .route('/:comment_id')
   .get(getCommentById)
   .patch(patchComment)
-  .delete(deleteComment);
+  .delete(deleteComment)
+  .all(methodNotAllowed);
 
 module.exports = commentsRouter;
