@@ -32,7 +32,55 @@ describe.only('/', () => {
           .get('/api/articles')
           .expect(200)
           .then(res => {
-            console.log(res.body.articles);
+            expect(res.body.articles).to.be.an('array');
+            expect(res.body.articles[0]).to.have.keys(
+              'author',
+              'title',
+              'article_id',
+              'topic',
+              'created_at',
+              'votes',
+              'comment_count'
+            );
+            expect(res.body.articles[0].article_id).to.equal(12);
+            expect(res.body.articles[0].author).to.equal('butter_bridge');
+            expect(res.body.articles[0].comment_count).to.equal('0');
+          });
+      });
+      it('GET status:200 should accept query author, which filters articles by author', () => {
+        return request
+          .get('/api/articles?author=butter_bridge')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an('array');
+            expect(res.body.articles.length).to.equal(3);
+          });
+      });
+      it('GET status:200 should accept query topic, which filters articles by topic', () => {
+        return request
+          .get('/api/articles?topic=mitch')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an('array');
+            expect(res.body.articles.length).to.equal(11);
+          });
+      });
+      it('GET status:200 should accept query sort_by, which sorts results by specified column', () => {
+        return request
+          .get('/api/articles?sort_by=author')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an('array');
+            expect(res.body.articles[0].author).to.equal('rogersop');
+          });
+      });
+      it('GET status:200 should accept query order, which sorts results asc or desc', () => {
+        return request
+          .get('/api/articles?sort_by=topic&order=asc')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an('array');
+            expect(res.body.articles[0].topic).to.equal('cats');
           });
       });
     });

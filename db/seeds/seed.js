@@ -27,7 +27,5 @@ exports.seed = (connection, Promise) => {
       const formattedComments = formatComments(commentsData, articles);
       return connection.insert(formattedComments).into('comments');
     })
-    .then(() => {
-      console.log('import complete');
-    });
+    .then(() => {});
 };
