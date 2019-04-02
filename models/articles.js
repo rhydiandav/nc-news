@@ -36,7 +36,8 @@ exports.fetchArticleById = article_id => {
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
-    .where({ 'articles.article_id': article_id });
+    .where({ 'articles.article_id': article_id })
+    .first();
 };
 
 exports.updateArticle = (article_id, inc_votes) => {

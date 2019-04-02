@@ -90,8 +90,8 @@ describe.only('/', () => {
           .get('/api/articles/1')
           .expect(200)
           .then(res => {
-            expect(res.body.articles.length).to.equal(1);
-            expect(res.body.articles[0].article_id).to.equal(1);
+            expect(res.body.article).to.be.an('object');
+            expect(res.body.article.article_id).to.equal(1);
           });
       });
       it('GET for article number that is valid but doesnt exist should return an error', () => {

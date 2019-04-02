@@ -18,14 +18,13 @@ exports.getAllArticles = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   fetchArticleById(article_id)
-    .then(articles => {
-      if (articles.length === 0) {
+    .then(article => {
+      if (!article) {
         return Promise.reject({
           status: 404,
           msg: `no article found for article_id ${article_id}`
         });
-      }
-      res.status(200).send({ articles });
+      } else res.status(200).send({ article });
     })
     .catch(next);
 };
