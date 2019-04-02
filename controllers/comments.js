@@ -6,11 +6,16 @@ const {
 
 exports.getCommentById = (req, res, next) => {
   const { comment_id } = req.params;
-  fetchCommentById(comment_id).then(comment => {
-    if (comment.length === 0) {
-      res.status(404).send({ msg: 'no comment found with specified ID' });
-    } else res.status(200).send({ comment });
-  });
+  fetchCommentById(comment_id)
+    .then(comment => {
+      if (comment.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `no comment found for comment_id ${comment_id}`
+        });
+      } else res.status(200).send({ comment });
+    })
+    .catch(next);
 };
 
 exports.patchComment = (req, res, next) => {

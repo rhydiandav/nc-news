@@ -20,7 +20,10 @@ exports.getArticleById = (req, res, next) => {
   fetchArticleById(article_id)
     .then(articles => {
       if (articles.length === 0) {
-        res.status(404).send({ msg: 'no article found with specified ID' });
+        return Promise.reject({
+          status: 404,
+          msg: `no article found for article_id ${article_id}`
+        });
       }
       res.status(200).send({ articles });
     })

@@ -99,7 +99,9 @@ describe.only('/', () => {
           .get('/api/articles/100')
           .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal('no article found with specified ID');
+            expect(res.body.msg).to.equal(
+              'no article found for article_id 100'
+            );
           });
       });
       it('PATCH status:200 with article id should return updated article', () => {
@@ -135,7 +137,7 @@ describe.only('/', () => {
               .expect(404)
               .then(res => {
                 expect(res.body.msg).to.equal(
-                  'no article found with specified ID'
+                  'no article found for article_id 1'
                 );
               });
           });
@@ -242,7 +244,7 @@ describe.only('/', () => {
               .expect(404)
               .then(res => {
                 expect(res.body.msg).to.equal(
-                  'no comment found with specified ID'
+                  'no comment found for comment_id 1'
                 );
               });
           });
