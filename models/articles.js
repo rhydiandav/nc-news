@@ -13,5 +13,6 @@ exports.fetchAllArticles = () => {
     .count('comments.article_id as comment_count')
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
-    .groupBy('articles.article_id');
+    .groupBy('articles.article_id')
+    .orderBy('article_id');
 };
