@@ -91,6 +91,26 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.articles.length).to.equal(1);
+            expect(res.body.articles[0].article_id).to.equal(1);
+          });
+      });
+      it('GET for article number that is valid but doesnt exist should return an error', () => {
+        return request
+          .get('/api/articles/100')
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal('no article found with specified ID');
+          });
+      });
+      it('PATCH status:200 with article id should return updated article', () => {
+        return request
+          .patch('/api/articles/1')
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles.length).to.equal(1);
+            expect(res.body.articles[0].article_id).to.equal(1);
+            expect(res.body.articles[0].votes).to.equal(101);
           });
       });
     });
