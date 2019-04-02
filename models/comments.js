@@ -1,5 +1,12 @@
 const connection = require('../db/connection');
 
+exports.fetchCommentById = comment_id => {
+  return connection
+    .select('*')
+    .from('comments')
+    .where({ comment_id });
+};
+
 exports.updateComment = (comment_id, inc_votes) => {
   return connection
     .select('*')
@@ -15,4 +22,12 @@ exports.updateComment = (comment_id, inc_votes) => {
         .update({ votes: newVotes })
         .returning('*');
     });
+};
+
+exports.removeComment = comment_id => {
+  return connection
+    .select('*')
+    .from('comments')
+    .where({ comment_id })
+    .del();
 };

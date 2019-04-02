@@ -211,6 +211,14 @@ describe.only('/', () => {
           .send({ inc_votes: 1 })
           .expect(200)
           .then(res => {
+            expect(res.body.comment[0]).to.have.keys(
+              'comment_id',
+              'author',
+              'article_id',
+              'votes',
+              'created_at',
+              'body'
+            );
             expect(res.body.comment[0].votes).to.equal(17);
           });
       });
@@ -221,6 +229,22 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.comment[0].votes).to.equal(6);
+          });
+      });
+      it('DELETE status:204 will remove specified comment', () => {
+        return request
+          .delete('/api/comments/1')
+          .expect(204)
+          .then(res => {
+            expect(res.body).to.eql({});
+            return request
+              .get('/api/comments/1')
+              .expect(404)
+              .then(res => {
+                expect(res.body.msg).to.equal(
+                  'no comment found with specified ID'
+                );
+              });
           });
       });
     });
