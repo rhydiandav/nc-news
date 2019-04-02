@@ -179,6 +179,50 @@ describe.only('/', () => {
             expect(res.body.comments[0].author).to.equal('butter_bridge');
           });
       });
+      it('POST status:201 returns the posted comment', () => {
+        return request
+          .post('/api/articles/1/comments')
+          .send({ username: 'icellusedkars', body: 'comment body' })
+          .expect(201)
+          .then(res => {
+            expect(res.body.comment[0]).to.have.keys(
+              'comment_id',
+              'author',
+              'article_id',
+              'votes',
+              'created_at',
+              'body'
+            );
+          })
+          .then(() => {
+            return request
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(res => {
+                expect(res.body.comments[0].body).to.equal('comment body');
+              });
+          });
+      });
+    });
+    describe('/comments/:comment_id', () => {
+      it('PATCH status:200 responds with updated comment, updated votes with positive number', () => {
+        return request
+          .patch('/api/comments/1')
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment[0].votes).to.equal(17);
+          });
+      });
+      it('PATCH status:200 responds with updated comment, updates votes with negative number', () => {
+        return request
+          .patch('/api/comments/1')
+          .send({ inc_votes: -10 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.comment[0].votes).to.equal(6);
+          });
+      });
     });
   });
 });

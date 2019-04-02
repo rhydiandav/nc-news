@@ -78,3 +78,10 @@ exports.fetchComments = (article_id, sort_by, order) => {
     .where({ article_id })
     .orderBy(sort_by || 'created_at', order || 'desc');
 };
+
+exports.createComment = (article_id, username, body) => {
+  return connection
+    .insert({ article_id, author: username, body })
+    .into('comments')
+    .returning('*');
+};
