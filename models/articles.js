@@ -46,12 +46,27 @@ exports.updateArticle = (article_id, inc_votes) => {
     .where({ article_id })
     .returning('*')
     .then(article => {
-      article[0].votes += inc_votes;
+      const newVotes = article[0].votes + inc_votes;
       return connection
         .select('*')
         .from('articles')
         .where({ article_id })
-        .update({ votes: article[0].votes })
+        .update({ votes: newVotes })
         .returning('*');
+    });
+};
+
+exports.removeArticle = article_id => {
+  return connection
+    .select('*')
+    .from('comments')
+    .where({ article_id })
+    .del()
+    .then(() => {
+      return connection
+        .select('*')
+        .from('articles')
+        .where({ article_id })
+        .del();
     });
 };

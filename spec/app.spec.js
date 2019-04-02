@@ -113,6 +113,33 @@ describe.only('/', () => {
             expect(res.body.articles[0].votes).to.equal(101);
           });
       });
+      it('PATCH status:200 with article id should allow negative votes', () => {
+        return request
+          .patch('/api/articles/1')
+          .send({ inc_votes: -5 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles.length).to.equal(1);
+            expect(res.body.articles[0].article_id).to.equal(1);
+            expect(res.body.articles[0].votes).to.equal(95);
+          });
+      });
+      it('DELETE status:204 will remove specified article', () => {
+        return request
+          .delete('/api/articles/1')
+          .expect(204)
+          .then(res => {
+            expect(res.body).to.eql({});
+            return request
+              .get('/api/articles/1')
+              .expect(404)
+              .then(res => {
+                expect(res.body.msg).to.equal(
+                  'no article found with specified ID'
+                );
+              });
+          });
+      });
     });
   });
 });
