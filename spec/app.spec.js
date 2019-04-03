@@ -104,6 +104,7 @@ describe.only('/', () => {
             );
           });
       });
+      // should return bject
       it('PATCH status:200 with article id should return updated article', () => {
         return request
           .patch('/api/articles/1')
