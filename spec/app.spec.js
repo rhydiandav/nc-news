@@ -215,7 +215,7 @@ describe.only('/', () => {
           .send({ inc_votes: 1 })
           .expect(200)
           .then(res => {
-            expect(res.body.comment[0]).to.have.keys(
+            expect(res.body.comment).to.have.keys(
               'comment_id',
               'author',
               'article_id',
@@ -223,7 +223,7 @@ describe.only('/', () => {
               'created_at',
               'body'
             );
-            expect(res.body.comment[0].votes).to.equal(17);
+            expect(res.body.comment.votes).to.equal(17);
           });
       });
       it('PATCH status:200 responds with updated comment, updates votes with negative number', () => {
@@ -232,7 +232,7 @@ describe.only('/', () => {
           .send({ inc_votes: -10 })
           .expect(200)
           .then(res => {
-            expect(res.body.comment[0].votes).to.equal(6);
+            expect(res.body.comment.votes).to.equal(6);
           });
       });
       it('DELETE status:204 will remove specified comment', () => {

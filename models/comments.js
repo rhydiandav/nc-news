@@ -9,18 +9,23 @@ exports.fetchCommentById = comment_id => {
 
 exports.updateComment = (comment_id, inc_votes) => {
   return connection
-    .select('*')
+    .select('votes')
     .from('comments')
     .where({ comment_id })
+    .first()
     .returning('*')
     .then(comment => {
-      const newVotes = comment[0].votes + inc_votes;
+      return connection
+        .update({ votes: comment.votes + inc_votes })
+        .from('comments')
+        .where({ comment_id });
+    })
+    .then(() => {
       return connection
         .select('*')
         .from('comments')
-        .where({ comment_id })
-        .update({ votes: newVotes })
-        .returning('*');
+        .first()
+        .where({ comment_id });
     });
 };
 
