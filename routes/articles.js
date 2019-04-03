@@ -10,7 +10,10 @@ const {
 } = require('../controllers/articles');
 const articlesRouter = require('express').Router();
 
-articlesRouter.route('/').get(getAllArticles);
+articlesRouter
+  .route('/')
+  .get(getAllArticles)
+  .all(methodNotAllowed);
 
 articlesRouter
   .route('/:article_id')

@@ -25,6 +25,14 @@ describe.only('/', () => {
             expect(res.body.topics[0].slug).to.equal('mitch');
           });
       });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/topics')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
+          });
+      });
     });
     describe('/articles', () => {
       it('GET status:200 serves up an array of article objects', () => {
@@ -81,6 +89,14 @@ describe.only('/', () => {
           .then(res => {
             expect(res.body.articles).to.be.an('array');
             expect(res.body.articles[0].topic).to.equal('cats');
+          });
+      });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/articles')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
           });
       });
     });
@@ -142,6 +158,14 @@ describe.only('/', () => {
                   'no article found for article_id 1'
                 );
               });
+          });
+      });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/articles/1')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
           });
       });
     });
@@ -207,6 +231,14 @@ describe.only('/', () => {
               });
           });
       });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/articles/1/comments')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
+          });
+      });
     });
     describe('/comments/:comment_id', () => {
       it('PATCH status:200 responds with updated comment, updated votes with positive number', () => {
@@ -253,6 +285,14 @@ describe.only('/', () => {
               });
           });
       });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/comments/1')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
+          });
+      });
     });
     describe('/users/:username', () => {
       it('GET status:200 should serve up a username object', () => {
@@ -266,6 +306,24 @@ describe.only('/', () => {
               'name'
             );
             expect(res.body.user.name).to.equal('sam');
+          });
+      });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/users/icellusedkars')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
+          });
+      });
+    });
+    describe('/non-existent-route', () => {
+      it('status:404 for route that doesnt exist', () => {
+        return request
+          .get('/non-existent-route')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Route Not Found');
           });
       });
     });
