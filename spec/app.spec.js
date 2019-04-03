@@ -197,6 +197,16 @@ describe.only('/', () => {
             expect(res.body.comments[0].author).to.equal('icellusedkars');
           });
       });
+      it('GET status:400 when passed an invalid sort_by query', () => {
+        return request
+          .get('/api/articles/1/comments?sort_by=not-a-column')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "comment_id", "votes", "created_at", "author", "body" from "comments" where "article_id" = $1 order by "not-a-column" desc - column "not-a-column" does not exist'
+            );
+          });
+      });
       it('GET status:200 should allow order query', () => {
         return request
           .get('/api/articles/1/comments?sort_by=author&order=asc')

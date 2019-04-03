@@ -32,30 +32,38 @@ exports.getArticleById = (req, res, next) => {
 exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
-  updateArticle(article_id, inc_votes).then(article => {
-    res.status(200).send({ article });
-  });
+  updateArticle(article_id, inc_votes)
+    .then(article => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
 };
 
 exports.deleteArticleByID = (req, res, next) => {
   const { article_id } = req.params;
-  removeArticle(article_id).then(() => {
-    res.sendStatus(204);
-  });
+  removeArticle(article_id)
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(next);
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { sort_by, order } = req.query;
-  fetchComments(article_id, sort_by, order).then(comments => {
-    res.status(200).send({ comments });
-  });
+  fetchComments(article_id, sort_by, order)
+    .then(comments => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
 };
 
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
-  createComment(article_id, username, body).then(comment => {
-    res.status(201).send({ comment });
-  });
+  createComment(article_id, username, body)
+    .then(comment => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
 };
