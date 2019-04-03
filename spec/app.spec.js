@@ -82,6 +82,16 @@ describe.only('/', () => {
             expect(res.body.articles[0].author).to.equal('rogersop');
           });
       });
+      it('GET status:400 when passed an invalid sort_by query', () => {
+        return request
+          .get('/api/articles/?sort_by=not-a-column')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" group by "articles"."article_id" order by "not-a-column" desc - column "not-a-column" does not exist'
+            );
+          });
+      });
       it('GET status:200 should accept query order, which sorts results asc or desc', () => {
         return request
           .get('/api/articles?sort_by=topic&order=asc')
@@ -110,13 +120,23 @@ describe.only('/', () => {
             expect(res.body.article.article_id).to.equal(1);
           });
       });
-      it('GET for article number that is valid but doesnt exist should return an error', () => {
+      it('GET status:404 for article number that is valid but doesnt exist', () => {
         return request
           .get('/api/articles/100')
           .expect(404)
           .then(res => {
             expect(res.body.msg).to.equal(
               'no article found for article_id 100'
+            );
+          });
+      });
+      it('GET status:400 for article with invalid id', () => {
+        return request
+          .get('/api/articles/invalid-id')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "invalid-id"'
             );
           });
       });
@@ -275,6 +295,16 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.comment.votes).to.equal(6);
+          });
+      });
+      it('PATCH status:400 for comment with invalid id', () => {
+        return request
+          .patch('/api/comments/invalid-id')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "votes" from "comments" where "comment_id" = $1 limit $2 - invalid input syntax for integer: "invalid-id"'
+            );
           });
       });
       it('DELETE status:204 will remove specified comment', () => {
