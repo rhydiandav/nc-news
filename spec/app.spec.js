@@ -104,7 +104,6 @@ describe.only('/', () => {
             );
           });
       });
-      // should return bject
       it('PATCH status:200 with article id should return updated article as an object', () => {
         return request
           .patch('/api/articles/1')
@@ -133,6 +132,8 @@ describe.only('/', () => {
           .expect(204)
           .then(res => {
             expect(res.body).to.eql({});
+          })
+          .then(() => {
             return request
               .get('/api/articles/1')
               .expect(404)
@@ -182,13 +183,13 @@ describe.only('/', () => {
             expect(res.body.comments[0].author).to.equal('butter_bridge');
           });
       });
-      it('POST status:201 returns the posted comment', () => {
+      it('POST status:201 returns the posted comment as an object', () => {
         return request
           .post('/api/articles/1/comments')
           .send({ username: 'icellusedkars', body: 'comment body' })
           .expect(201)
           .then(res => {
-            expect(res.body.comment[0]).to.have.keys(
+            expect(res.body.comment).to.have.keys(
               'comment_id',
               'author',
               'article_id',

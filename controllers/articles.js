@@ -40,7 +40,7 @@ exports.patchArticleById = (req, res, next) => {
 exports.deleteArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   removeArticle(article_id).then(() => {
-    res.status(204).send();
+    res.sendStatus(204);
   });
 };
 
