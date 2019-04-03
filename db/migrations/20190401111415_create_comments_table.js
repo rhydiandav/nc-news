@@ -10,6 +10,7 @@ exports.up = function(connection, Promise) {
       .integer('article_id')
       .references('article_id')
       .inTable('articles')
+      .onDelete('CASCADE')
       .notNullable();
     commentsTable.integer('votes').defaultTo(0);
     commentsTable.date('created_at').defaultTo(connection.fn.now());

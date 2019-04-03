@@ -60,16 +60,9 @@ exports.updateArticle = (article_id, inc_votes) => {
 exports.removeArticle = article_id => {
   return connection
     .select('*')
-    .from('comments')
+    .from('articles')
     .where({ article_id })
-    .del()
-    .then(() => {
-      return connection
-        .select('*')
-        .from('articles')
-        .where({ article_id })
-        .del();
-    });
+    .del();
 };
 
 exports.fetchComments = (article_id, sort_by, order) => {
