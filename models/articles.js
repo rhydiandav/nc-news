@@ -41,20 +41,31 @@ exports.fetchArticleById = article_id => {
 };
 
 exports.updateArticle = (article_id, inc_votes) => {
-  return connection
-    .select('*')
-    .from('articles')
-    .where({ article_id })
-    .returning('*')
-    .then(article => {
-      const newVotes = article[0].votes + inc_votes;
-      return connection
-        .select('*')
-        .from('articles')
-        .where({ article_id })
-        .update({ votes: newVotes })
-        .returning('*');
-    });
+  return (
+    connection
+      // selects the votes column from the relevant article
+      .select('votes')
+      .from('articles')
+      .where({ article_id })
+      .first()
+      .returning('*')
+      .then(article => {
+        // uses the returned vtotes number and inc_votes to set a new value for votes
+        return connection
+          .update({ votes: article.votes + inc_votes })
+          .from('articles')
+          .where({ article_id });
+      })
+      .then(() => {
+        // returns the article that has been updated
+        return connection
+          .select('*')
+          .from('articles')
+          .where({ article_id })
+          .first()
+          .returning('*');
+      })
+  );
 };
 
 exports.removeArticle = article_id => {

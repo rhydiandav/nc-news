@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = require('./routes/api');
-const { routeNotFound, handle500, itemNotFound } = require('./errors');
+const { routeNotFound, handle500, resourceNotFound } = require('./errors');
 
 const app = express();
 
@@ -10,7 +10,7 @@ app.use('/api', apiRouter);
 
 app.all('/*', routeNotFound);
 
-app.use(itemNotFound);
+app.use(resourceNotFound);
 
 app.use(handle500);
 

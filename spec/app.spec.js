@@ -85,7 +85,7 @@ describe.only('/', () => {
       });
     });
     describe('/articles/:article_id', () => {
-      it('GET status:200 should accept article id as a parametric endpoint', () => {
+      it('GET status:200 should return an object with information on the article', () => {
         return request
           .get('/api/articles/1')
           .expect(200)
@@ -105,15 +105,15 @@ describe.only('/', () => {
           });
       });
       // should return bject
-      it('PATCH status:200 with article id should return updated article', () => {
+      it('PATCH status:200 with article id should return updated article as an object', () => {
         return request
           .patch('/api/articles/1')
           .send({ inc_votes: 1 })
           .expect(200)
           .then(res => {
-            expect(res.body.articles.length).to.equal(1);
-            expect(res.body.articles[0].article_id).to.equal(1);
-            expect(res.body.articles[0].votes).to.equal(101);
+            expect(res.body.article).to.be.an('object');
+            expect(res.body.article.article_id).to.equal(1);
+            expect(res.body.article.votes).to.equal(101);
           });
       });
       it('PATCH status:200 with article id should allow negative votes', () => {
@@ -122,9 +122,9 @@ describe.only('/', () => {
           .send({ inc_votes: -5 })
           .expect(200)
           .then(res => {
-            expect(res.body.articles.length).to.equal(1);
-            expect(res.body.articles[0].article_id).to.equal(1);
-            expect(res.body.articles[0].votes).to.equal(95);
+            expect(res.body.article).to.be.an('object');
+            expect(res.body.article.article_id).to.equal(1);
+            expect(res.body.article.votes).to.equal(95);
           });
       });
       it('DELETE status:204 will remove specified article', () => {

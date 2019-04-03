@@ -6,7 +6,7 @@ exports.methodNotAllowed = (req, res) => {
   res.status(405).send({ msg: 'Method Not Allowed' });
 };
 
-exports.itemNotFound = (err, req, res, next) => {
+exports.resourceNotFound = (err, req, res, next) => {
   if ((err.status = 404)) {
     res.status(err.status).send({ msg: err.msg });
   }
