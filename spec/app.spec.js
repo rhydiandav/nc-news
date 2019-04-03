@@ -241,6 +241,8 @@ describe.only('/', () => {
           .expect(204)
           .then(res => {
             expect(res.body).to.eql({});
+          })
+          .then(() => {
             return request
               .get('/api/comments/1')
               .expect(404)
@@ -258,12 +260,12 @@ describe.only('/', () => {
           .get('/api/users/icellusedkars')
           .expect(200)
           .then(res => {
-            expect(res.body.user[0]).to.have.keys(
+            expect(res.body.user).to.have.keys(
               'username',
               'avatar_url',
               'name'
             );
-            expect(res.body.user[0].name).to.equal('sam');
+            expect(res.body.user.name).to.equal('sam');
           });
       });
     });
