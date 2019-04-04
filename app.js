@@ -4,6 +4,7 @@ const {
   routeNotFound,
   handleCustomErrors,
   handleBadRequest,
+  handleArticleNotFound,
   handle500
 } = require('./errors');
 
@@ -18,6 +19,8 @@ app.all('/*', routeNotFound);
 app.use(handleCustomErrors);
 
 app.use(handleBadRequest);
+
+app.use(handleArticleNotFound);
 
 app.use(handle500);
 

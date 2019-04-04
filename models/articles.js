@@ -41,6 +41,7 @@ exports.fetchArticleById = article_id => {
 };
 
 exports.updateArticle = (article_id, inc_votes) => {
+  if (!inc_votes) inc_votes = 0;
   return (
     connection
       // selects the votes column from the relevant article

@@ -178,6 +178,59 @@ describe.only('/', () => {
             expect(res.body.article.votes).to.equal(95);
           });
       });
+      it('PATCH status:404 when article doesnt exist', () => {
+        return request
+          .patch('/api/articles/100')
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Article not found');
+          });
+      });
+      it('PATCH status:400 when article id is invalid', () => {
+        return request
+          .patch('/api/articles/not-an-id')
+          .send({ inc_votes: 1 })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "votes" from "articles" where "article_id" = $1 limit $2 - invalid input syntax for integer: "not-an-id"'
+            );
+          });
+      });
+      it('PATCH status:200 will return unaltered article when no inc_votes in body', () => {
+        return request
+          .patch('/api/articles/1')
+          .send({})
+          .expect(200)
+          .then(res => {
+            expect(res.body.article).to.be.an('object');
+            expect(res.body.article.article_id).to.equal(1);
+            expect(res.body.article.votes).to.equal(100);
+          });
+      });
+      it('PATCH status:400 when value of inc_votes is not a number', () => {
+        return request
+          .patch('/api/articles/1')
+          .send({ inc_votes: 'not-a-number' })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'update "articles" set "votes" = $1 where "article_id" = $2 - invalid input syntax for integer: "100not-a-number"'
+            );
+          });
+      });
+      it('PATCH status:200 should return updated article when req body contains unused properties', () => {
+        return request
+          .patch('/api/articles/1')
+          .send({ inc_votes: 1, key: 'value' })
+          .expect(200)
+          .then(res => {
+            expect(res.body.article).to.be.an('object');
+            expect(res.body.article.article_id).to.equal(1);
+            expect(res.body.article.votes).to.equal(101);
+          });
+      });
       it('DELETE status:204 will remove specified article', () => {
         return request
           .delete('/api/articles/1')
@@ -194,6 +247,24 @@ describe.only('/', () => {
                   'no article found for article_id 1'
                 );
               });
+          });
+      });
+      it('DELETE status:404 for article that doesnt exist', () => {
+        return request
+          .delete('/api/articles/1000')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Article 1000 not found');
+          });
+      });
+      it('DELETE status:400 for invalid article id', () => {
+        return request
+          .delete('/api/articles/not-an-article')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "not-an-article"'
+            );
           });
       });
       it('invalid method status:405', () => {

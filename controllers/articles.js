@@ -6,7 +6,6 @@ const {
   fetchComments,
   createComment
 } = require('../models/articles');
-const { fetchUser } = require('../models/users');
 
 exports.getAllArticles = (req, res, next) => {
   fetchAllArticles(req.query)
@@ -42,9 +41,14 @@ exports.patchArticleById = (req, res, next) => {
 
 exports.deleteArticleByID = (req, res, next) => {
   const { article_id } = req.params;
-  removeArticle(article_id)
-    .then(() => {
-      res.sendStatus(204);
+  return Promise.all([fetchArticleById(article_id), removeArticle(article_id)])
+    .then(([article]) => {
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: `Article ${article_id} not found`
+        });
+      } else res.sendStatus(204);
     })
     .catch(next);
 };

@@ -18,6 +18,13 @@ exports.handleBadRequest = (err, req, res, next) => {
   } else next(err);
 };
 
+exports.handleArticleNotFound = (err, req, res, next) => {
+  if (err.message === "Cannot read property 'votes' of undefined") {
+    res.status(404).send({ msg: 'Article not found' });
+  } else next(err);
+};
+
 exports.handle500 = (err, req, res, next) => {
+  console.log(err.message);
   res.status(500).send({ msg: 'Internal Server Error' });
 };
