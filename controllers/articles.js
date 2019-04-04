@@ -43,7 +43,7 @@ exports.patchArticleById = (req, res, next) => {
           status: 404,
           msg: `Article ${article_id} not found`
         });
-      } else res.status(200).send({ article: updatedArticle });
+      } else res.status(200).send({ article: updatedArticle[0] });
     })
     .catch(next);
 };

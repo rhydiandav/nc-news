@@ -21,9 +21,18 @@ exports.getCommentById = (req, res, next) => {
 exports.patchComment = (req, res, next) => {
   const { comment_id } = req.params;
   const { inc_votes } = req.body;
-  updateComment(comment_id, inc_votes)
-    .then(comment => {
-      res.status(200).send({ comment });
+
+  return Promise.all([
+    fetchCommentById(comment_id),
+    updateComment(comment_id, inc_votes)
+  ])
+    .then(([oldComment, updatedComment]) => {
+      if (!oldComment) {
+        return Promise.reject({
+          status: 404,
+          msg: `Comment ${comment_id} not found`
+        });
+      } else res.status(200).send({ comment: updatedComment[0] });
     })
     .catch(next);
 };

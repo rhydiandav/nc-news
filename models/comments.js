@@ -9,25 +9,12 @@ exports.fetchCommentById = comment_id => {
 };
 
 exports.updateComment = (comment_id, inc_votes) => {
+  if (!inc_votes) inc_votes = 0;
   return connection
-    .select('votes')
+    .increment({ votes: inc_votes })
     .from('comments')
     .where({ comment_id })
-    .first()
-    .returning('*')
-    .then(comment => {
-      return connection
-        .update({ votes: comment.votes + inc_votes })
-        .from('comments')
-        .where({ comment_id });
-    })
-    .then(() => {
-      return connection
-        .select('*')
-        .from('comments')
-        .first()
-        .where({ comment_id });
-    });
+    .returning('*');
 };
 
 exports.removeComment = comment_id => {

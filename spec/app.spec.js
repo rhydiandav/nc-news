@@ -194,7 +194,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'update "articles" set "votes" = "votes" + $1 where "article_id" = $2 returning * - invalid input syntax for integer: "not-an-id"'
+              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "not-an-id"'
             );
           });
       });
@@ -475,7 +475,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'select "votes" from "comments" where "comment_id" = $1 limit $2 - invalid input syntax for integer: "invalid-id"'
+              'select * from "comments" where "comment_id" = $1 limit $2 - invalid input syntax for integer: "invalid-id"'
             );
           });
       });
@@ -485,7 +485,7 @@ describe.only('/', () => {
           .send({ inc_votes: 1 })
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).to.equal('Resource not found');
+            expect(body.msg).to.equal('Comment 1000 not found');
           });
       });
       it('DELETE status:204 will remove specified comment', () => {

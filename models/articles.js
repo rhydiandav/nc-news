@@ -71,23 +71,11 @@ exports.fetchArticleById = article_id => {
 
 exports.updateArticle = (article_id, inc_votes) => {
   if (!inc_votes) inc_votes = 0;
-  return (
-    connection
-      // increments the votes
-      .increment({ votes: inc_votes })
-      .from('articles')
-      .where({ article_id })
-      .returning('*')
-      .then(() => {
-        // returns the article that has been updated
-        return connection
-          .select('*')
-          .from('articles')
-          .where({ article_id })
-          .first()
-          .returning('*');
-      })
-  );
+  return connection
+    .increment({ votes: inc_votes })
+    .from('articles')
+    .where({ article_id })
+    .returning('*');
 };
 
 exports.removeArticle = article_id => {
