@@ -39,14 +39,15 @@ exports.patchComment = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
-  return Promise.all([fetchCommentById(comment_id), removeComment(comment_id)])
-    .then(([comment]) => {
-      if (!comment) {
+  removeComment(comment_id)
+    .then(numDeleted => {
+      if (!numDeleted) {
         return Promise.reject({
           status: 404,
           msg: `Comment ${comment_id} not found`
         });
-      } else res.sendStatus(204);
+      }
+      res.sendStatus(204);
     })
     .catch(next);
 };

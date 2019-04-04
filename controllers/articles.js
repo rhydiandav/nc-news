@@ -50,14 +50,15 @@ exports.patchArticleById = (req, res, next) => {
 
 exports.deleteArticleByID = (req, res, next) => {
   const { article_id } = req.params;
-  return Promise.all([fetchArticleById(article_id), removeArticle(article_id)])
-    .then(([article]) => {
-      if (!article) {
+  removeArticle(article_id)
+    .then(numDeleted => {
+      if (!numDeleted) {
         return Promise.reject({
           status: 404,
           msg: `Article ${article_id} not found`
         });
-      } else res.sendStatus(204);
+      }
+      res.sendStatus(204);
     })
     .catch(next);
 };

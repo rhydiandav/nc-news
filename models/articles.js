@@ -40,35 +40,6 @@ exports.fetchArticleById = article_id => {
     .first();
 };
 
-// exports.updateArticle = (article_id, inc_votes) => {
-//   if (!inc_votes) inc_votes = 0;
-//   return (
-//     connection
-//       // selects the votes column from the relevant article
-//       .select('votes')
-//       .from('articles')
-//       .where({ article_id })
-//       .first()
-//       .returning('*')
-//       .then(article => {
-//         // uses the returned vtotes number and inc_votes to set a new value for votes
-//         return connection
-//           .update({ votes: article.votes + inc_votes })
-//           .from('articles')
-//           .where({ article_id });
-//       })
-//       .then(() => {
-//         // returns the article that has been updated
-//         return connection
-//           .select('*')
-//           .from('articles')
-//           .where({ article_id })
-//           .first()
-//           .returning('*');
-//       })
-//   );
-// };
-
 exports.updateArticle = (article_id, inc_votes) => {
   if (!inc_votes) inc_votes = 0;
   return connection

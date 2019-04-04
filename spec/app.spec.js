@@ -263,7 +263,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "not-an-article"'
+              'delete from "articles" where "article_id" = $1 - invalid input syntax for integer: "not-an-article"'
             );
           });
       });
