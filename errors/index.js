@@ -20,7 +20,7 @@ exports.handleBadRequest = (err, req, res, next) => {
 
 exports.handleResourceNotFound = (err, req, res, next) => {
   if (err.message === "Cannot read property 'votes' of undefined") {
-    res.status(404).send({ msg: 'Article not found' });
+    res.status(404).send({ msg: 'Resource not found' });
   } else if (err.code === '23503') {
     res.status(404).send({ msg: err.message });
   } else next(err);

@@ -8,7 +8,7 @@ exports.getCommentById = (req, res, next) => {
   const { comment_id } = req.params;
   fetchCommentById(comment_id)
     .then(comment => {
-      if (comment.length === 0) {
+      if (!comment) {
         return Promise.reject({
           status: 404,
           msg: `no comment found for comment_id ${comment_id}`
@@ -30,9 +30,14 @@ exports.patchComment = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
-  removeComment(comment_id)
-    .then(() => {
-      res.sendStatus(204);
+  return Promise.all([fetchCommentById(comment_id), removeComment(comment_id)])
+    .then(([comment]) => {
+      if (!comment) {
+        return Promise.reject({
+          status: 404,
+          msg: `Comment ${comment_id} not found`
+        });
+      } else res.sendStatus(204);
     })
     .catch(next);
 };

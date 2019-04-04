@@ -184,7 +184,7 @@ describe.only('/', () => {
           .send({ inc_votes: 1 })
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).to.equal('Article not found');
+            expect(body.msg).to.equal('Resource not found');
           });
       });
       it('PATCH status:400 when article id is invalid', () => {
@@ -380,6 +380,58 @@ describe.only('/', () => {
           .send({ username: 'icellusedkars', body: 'comment body' })
           .expect(404);
       });
+      it('POST status:400 when article id invalid', () => {
+        return request
+          .post('/api/articles/not-an-article/comments')
+          .send({ username: 'icellusedkars', body: 'comment body' })
+          .expect(400);
+      });
+      it('POST status:400 when body contains unused username', () => {
+        return request
+          .post('/api/articles/not-an-article/comments')
+          .send({ username: 'not-a-user', body: 'comment body' })
+          .expect(400);
+      });
+      it('POST status:400 when no username specified', () => {
+        return request
+          .post('/api/articles/not-an-article/comments')
+          .send({ body: 'comment body' })
+          .expect(400);
+      });
+      it('POST status:400 when no comment body specified', () => {
+        return request
+          .post('/api/articles/not-an-article/comments')
+          .send({ username: 'icellusedkars' })
+          .expect(400);
+      });
+      it('POST status:201 returns the posted comment as an object when unused information is provided in the body', () => {
+        return request
+          .post('/api/articles/1/comments')
+          .send({
+            username: 'icellusedkars',
+            body: 'comment body',
+            extraKey: 'extra info'
+          })
+          .expect(201)
+          .then(res => {
+            expect(res.body.comment).to.have.keys(
+              'comment_id',
+              'author',
+              'article_id',
+              'votes',
+              'created_at',
+              'body'
+            );
+          })
+          .then(() => {
+            return request
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(res => {
+                expect(res.body.comments[0].body).to.equal('comment body');
+              });
+          });
+      });
       it('invalid method status:405', () => {
         return request
           .put('/api/articles/1/comments')
@@ -427,7 +479,15 @@ describe.only('/', () => {
             );
           });
       });
-
+      it('PATCH status:404 for comment that doesnt exist', () => {
+        return request
+          .patch('/api/comments/1000')
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Resource not found');
+          });
+      });
       it('DELETE status:204 will remove specified comment', () => {
         return request
           .delete('/api/comments/1')
@@ -445,6 +505,17 @@ describe.only('/', () => {
                 );
               });
           });
+      });
+      it('DELETE status:404 for comment that doesnt exist', () => {
+        return request
+          .delete('/api/comments/1000')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Comment 1000 not found');
+          });
+      });
+      it('DELETE status:400 for invalid comment id', () => {
+        return request.delete('/api/comments/not-a-comment').expect(400);
       });
       it('invalid method status:405', () => {
         return request

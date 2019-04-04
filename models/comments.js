@@ -4,7 +4,8 @@ exports.fetchCommentById = comment_id => {
   return connection
     .select('*')
     .from('comments')
-    .where({ comment_id });
+    .where({ comment_id })
+    .first();
 };
 
 exports.updateComment = (comment_id, inc_votes) => {
