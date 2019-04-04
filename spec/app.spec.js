@@ -207,6 +207,22 @@ describe.only('/', () => {
             expect(res.body.comments[0].comment_id).to.equal(2);
           });
       });
+      it('GET status:404 for article number that doesnt exist', () => {
+        return request
+          .get('/api/articles/1000/comments')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('no article found for article_id 1000');
+          });
+      });
+      it('GET status:200 should return an empty array if the article exists but has no comments', () => {
+        return request
+          .get('/api/articles/2/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(0);
+          });
+      });
       it('GET status:200 should allow sort_by query', () => {
         return request
           .get('/api/articles/1/comments?sort_by=author')
@@ -300,6 +316,7 @@ describe.only('/', () => {
       it('PATCH status:400 for comment with invalid id', () => {
         return request
           .patch('/api/comments/invalid-id')
+          .send({ inc_votes: 1 })
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
@@ -307,6 +324,7 @@ describe.only('/', () => {
             );
           });
       });
+
       it('DELETE status:204 will remove specified comment', () => {
         return request
           .delete('/api/comments/1')
@@ -346,6 +364,14 @@ describe.only('/', () => {
               'name'
             );
             expect(res.body.user.name).to.equal('sam');
+          });
+      });
+      it('GET status:404 for username that doesnt exist', () => {
+        return request
+          .get('/api/users/not-a-username')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('User not-a-username does not exist');
           });
       });
       it('invalid method status:405', () => {

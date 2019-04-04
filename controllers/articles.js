@@ -6,6 +6,7 @@ const {
   fetchComments,
   createComment
 } = require('../models/articles');
+const { fetchUser } = require('../models/users');
 
 exports.getAllArticles = (req, res, next) => {
   fetchAllArticles(req.query)
@@ -51,9 +52,17 @@ exports.deleteArticleByID = (req, res, next) => {
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { sort_by, order } = req.query;
-  fetchComments(article_id, sort_by, order)
-    .then(comments => {
-      res.status(200).send({ comments });
+  return Promise.all([
+    fetchArticleById(article_id),
+    fetchComments(article_id, sort_by, order)
+  ])
+    .then(([article, comments]) => {
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: `no article found for article_id ${article_id}`
+        });
+      } else res.status(200).send({ comments });
     })
     .catch(next);
 };
