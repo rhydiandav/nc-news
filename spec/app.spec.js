@@ -184,7 +184,7 @@ describe.only('/', () => {
           .send({ inc_votes: 1 })
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).to.equal('Resource not found');
+            expect(body.msg).to.equal('Article 100 not found');
           });
       });
       it('PATCH status:400 when article id is invalid', () => {
@@ -194,7 +194,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'select "votes" from "articles" where "article_id" = $1 limit $2 - invalid input syntax for integer: "not-an-id"'
+              'update "articles" set "votes" = "votes" + $1 where "article_id" = $2 returning * - invalid input syntax for integer: "not-an-id"'
             );
           });
       });
@@ -216,7 +216,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'update "articles" set "votes" = $1 where "article_id" = $2 - invalid input syntax for integer: "100not-a-number"'
+              'update "articles" set "votes" = "votes" + $1 where "article_id" = $2 returning * - invalid input syntax for integer: "NaN"'
             );
           });
       });

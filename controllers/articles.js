@@ -32,9 +32,18 @@ exports.getArticleById = (req, res, next) => {
 exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
-  updateArticle(article_id, inc_votes)
-    .then(article => {
-      res.status(200).send({ article });
+
+  return Promise.all([
+    fetchArticleById(article_id),
+    updateArticle(article_id, inc_votes)
+  ])
+    .then(([oldArticle, updatedArticle]) => {
+      if (!oldArticle) {
+        return Promise.reject({
+          status: 404,
+          msg: `Article ${article_id} not found`
+        });
+      } else res.status(200).send({ article: updatedArticle });
     })
     .catch(next);
 };
