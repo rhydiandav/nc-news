@@ -72,6 +72,9 @@ describe.only('/', () => {
             expect(res.body.articles.length).to.equal(0);
           });
       });
+      it('GET status:404 for an author that doesnt exist', () => {
+        return request.get('/api/articles?author=not-a-user').expect(404);
+      });
       it('GET status:200 should accept query topic, which filters articles by topic', () => {
         return request
           .get('/api/articles?topic=mitch')
@@ -386,7 +389,7 @@ describe.only('/', () => {
           .send({ username: 'icellusedkars', body: 'comment body' })
           .expect(400);
       });
-      it('POST status:400 when body contains unused username', () => {
+      it('POST status:400 when user doesnt exist', () => {
         return request
           .post('/api/articles/not-an-article/comments')
           .send({ username: 'not-a-user', body: 'comment body' })
@@ -532,12 +535,12 @@ describe.only('/', () => {
           .get('/api/users/icellusedkars')
           .expect(200)
           .then(res => {
-            expect(res.body.user).to.have.keys(
+            expect(res.body.users[0]).to.have.keys(
               'username',
               'avatar_url',
               'name'
             );
-            expect(res.body.user.name).to.equal('sam');
+            expect(res.body.users[0].name).to.equal('sam');
           });
       });
       it('GET status:404 for username that doesnt exist', () => {

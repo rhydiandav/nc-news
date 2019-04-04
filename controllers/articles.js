@@ -6,6 +6,7 @@ const {
   fetchComments,
   createComment
 } = require('../models/articles');
+const { fetchUser } = require('../models/users');
 
 exports.getAllArticles = (req, res, next) => {
   fetchAllArticles(req.query)
