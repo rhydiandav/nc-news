@@ -50,9 +50,8 @@ describe.only('/', () => {
               'votes',
               'comment_count'
             );
-            expect(res.body.articles[0].article_id).to.equal(12);
+            expect(res.body.articles[0].article_id).to.equal(1);
             expect(res.body.articles[0].author).to.equal('butter_bridge');
-            expect(res.body.articles[0].comment_count).to.equal('0');
           });
       });
       it('GET status:200 should accept query author, which filters articles by author', () => {
@@ -64,6 +63,15 @@ describe.only('/', () => {
             expect(res.body.articles.length).to.equal(3);
           });
       });
+      it('GET status:200 for an author that has no articles should return an empty array', () => {
+        return request
+          .get('/api/articles?author=newuser')
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an('array');
+            expect(res.body.articles.length).to.equal(0);
+          });
+      });
       it('GET status:200 should accept query topic, which filters articles by topic', () => {
         return request
           .get('/api/articles?topic=mitch')
@@ -71,6 +79,14 @@ describe.only('/', () => {
           .then(res => {
             expect(res.body.articles).to.be.an('array');
             expect(res.body.articles.length).to.equal(11);
+          });
+      });
+      it('GET status:200 when querying a topic that exists but has no articles', () => {
+        return request
+          .get('/api/articles?topic=unused-topic')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(0);
           });
       });
       it('GET status:200 should accept query sort_by, which sorts results by specified column', () => {
