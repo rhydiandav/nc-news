@@ -73,7 +73,12 @@ describe.only('/', () => {
           });
       });
       it('GET status:404 for an author that doesnt exist', () => {
-        return request.get('/api/articles?author=not-a-user').expect(404);
+        return request
+          .get('/api/articles?author=not-a-user')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('User not-a-user doesnt exist');
+          });
       });
       it('GET status:200 should accept query topic, which filters articles by topic', () => {
         return request
@@ -91,6 +96,9 @@ describe.only('/', () => {
           .then(({ body }) => {
             expect(body.articles.length).to.equal(0);
           });
+      });
+      it('GET status:404 for a topic that doesnt exist', () => {
+        return request.get('/api/articles?topic=not-a-topic').expect(404);
       });
       it('GET status:200 should accept query sort_by, which sorts results by specified column', () => {
         return request

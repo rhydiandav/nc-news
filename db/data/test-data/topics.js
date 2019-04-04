@@ -1,10 +1,11 @@
 module.exports = [
   {
     description: 'The man, the Mitch, the legend',
-    slug: 'mitch',
+    slug: 'mitch'
   },
   {
     description: 'Not dogs',
-    slug: 'cats',
+    slug: 'cats'
   },
+  { description: 'Unused Topic', slug: 'unused-topic' }
 ];

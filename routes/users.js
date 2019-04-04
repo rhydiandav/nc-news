@@ -1,15 +1,15 @@
 const { methodNotAllowed } = require('../errors');
-const { getUser } = require('../controllers/users');
+const { getUsers } = require('../controllers/users');
 const usersRouter = require('express').Router();
 
 usersRouter
   .route('/')
-  .get(getUser)
+  .get(getUsers)
   .all(methodNotAllowed);
 
 usersRouter
   .route('/:username')
-  .get(getUser)
+  .get(getUsers)
   .all(methodNotAllowed);
 
 module.exports = usersRouter;

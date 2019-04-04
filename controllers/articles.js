@@ -7,14 +7,25 @@ const {
   createComment
 } = require('../models/articles');
 const { fetchUsers } = require('../models/users');
+const { fetchTopics } = require('../models/topics');
 
 exports.getAllArticles = (req, res, next) => {
-  Promise.all([fetchUsers(req.query.author), fetchAllArticles(req.query)])
-    .then(([user, articles]) => {
+  Promise.all([
+    fetchUsers(req.query.author),
+    fetchTopics(req.query.topic),
+    fetchAllArticles(req.query)
+  ])
+    .then(([user, topic, articles]) => {
       if (user.length === 0) {
         return Promise.reject({
           status: 404,
           msg: `User ${req.query.author} doesnt exist`
+        });
+      }
+      if (topic.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `Topic '${req.query.topic}' doesnt exist`
         });
       }
       res.status(200).send({ articles });

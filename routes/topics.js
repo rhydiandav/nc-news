@@ -1,10 +1,15 @@
 const { methodNotAllowed } = require('../errors');
-const { getAllTopics } = require('../controllers/topics');
+const { getTopics } = require('../controllers/topics');
 const topicsRouter = require('express').Router();
 
 topicsRouter
   .route('/')
-  .get(getAllTopics)
+  .get(getTopics)
+  .all(methodNotAllowed);
+
+topicsRouter
+  .route('/:slug')
+  .get(getTopics)
   .all(methodNotAllowed);
 
 module.exports = topicsRouter;

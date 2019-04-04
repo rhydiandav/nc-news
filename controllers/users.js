@@ -1,6 +1,6 @@
 const { fetchUsers } = require('../models/users');
 
-exports.getUser = (req, res, next) => {
+exports.getUsers = (req, res, next) => {
   const { username } = req.params;
   fetchUsers(username)
     .then(users => {
