@@ -310,6 +310,16 @@ describe.only('/', () => {
             expect(body.comments.length).to.equal(0);
           });
       });
+      it('GET status:400 for invalid article id', () => {
+        return request
+          .get('/api/articles/not-an-article/comments')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal(
+              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "not-an-article"'
+            );
+          });
+      });
       it('GET status:200 should allow sort_by query', () => {
         return request
           .get('/api/articles/1/comments?sort_by=author')
@@ -363,6 +373,12 @@ describe.only('/', () => {
                 expect(res.body.comments[0].body).to.equal('comment body');
               });
           });
+      });
+      it('POST status:404 when article doesnt exist', () => {
+        return request
+          .post('/api/articles/1000/comments')
+          .send({ username: 'icellusedkars', body: 'comment body' })
+          .expect(404);
       });
       it('invalid method status:405', () => {
         return request
