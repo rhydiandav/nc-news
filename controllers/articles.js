@@ -6,11 +6,17 @@ const {
   fetchComments,
   createComment
 } = require('../models/articles');
-const { fetchUser } = require('../models/users');
+const { fetchUsers } = require('../models/users');
 
 exports.getAllArticles = (req, res, next) => {
-  fetchAllArticles(req.query)
-    .then(articles => {
+  Promise.all([fetchUsers(req.query.author), fetchAllArticles(req.query)])
+    .then(([user, articles]) => {
+      if (user.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `User ${req.query.author} doesnt exist`
+        });
+      }
       res.status(200).send({ articles });
     })
     .catch(next);
