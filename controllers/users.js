@@ -9,6 +9,9 @@ exports.getUsers = (req, res, next) => {
           status: 404,
           msg: `User ${username} does not exist`
         });
+      }
+      if (users.length === 1) {
+        res.status(200).send({ user: users[0] });
       } else res.status(200).send({ users });
     })
     .catch(next);

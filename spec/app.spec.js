@@ -405,7 +405,7 @@ describe.only('/', () => {
       });
       it('POST status:400 when no username specified', () => {
         return request
-          .post('/api/articles/not-an-article/comments')
+          .post('/api/articles/1/comments')
           .send({ body: 'comment body' })
           .expect(400);
       });
@@ -542,13 +542,9 @@ describe.only('/', () => {
         return request
           .get('/api/users/icellusedkars')
           .expect(200)
-          .then(res => {
-            expect(res.body.users[0]).to.have.keys(
-              'username',
-              'avatar_url',
-              'name'
-            );
-            expect(res.body.users[0].name).to.equal('sam');
+          .then(({ body }) => {
+            expect(body.user).to.have.keys('username', 'avatar_url', 'name');
+            expect(body.user.name).to.equal('sam');
           });
       });
       it('GET status:404 for username that doesnt exist', () => {

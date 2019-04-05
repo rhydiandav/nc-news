@@ -28,7 +28,11 @@ exports.getAllArticles = (req, res, next) => {
           msg: `Topic '${req.query.topic}' doesnt exist`
         });
       }
-      res.status(200).send({ articles });
+      if (articles.length === 1) {
+        res.status(200).send({
+          article: articles[0]
+        });
+      } else res.status(200).send({ articles });
     })
     .catch(next);
 };
@@ -42,7 +46,8 @@ exports.getArticleById = (req, res, next) => {
           status: 404,
           msg: `no article found for article_id ${article_id}`
         });
-      } else res.status(200).send({ article });
+      }
+      res.status(200).send({ article });
     })
     .catch(next);
 };
@@ -61,7 +66,8 @@ exports.patchArticleById = (req, res, next) => {
           status: 404,
           msg: `Article ${article_id} not found`
         });
-      } else res.status(200).send({ article: updatedArticle[0] });
+      }
+      res.status(200).send({ article: updatedArticle[0] });
     })
     .catch(next);
 };
@@ -94,6 +100,11 @@ exports.getCommentsByArticleId = (req, res, next) => {
           status: 404,
           msg: `no article found for article_id ${article_id}`
         });
+      }
+      if (comments.length === 1) {
+        res.status(200).send({
+          comment: comments[0]
+        });
       } else res.status(200).send({ comments });
     })
     .catch(next);
@@ -104,7 +115,7 @@ exports.postComment = (req, res, next) => {
   const { username, body } = req.body;
   createComment(article_id, username, body)
     .then(comment => {
-      res.status(201).send({ comment });
+      res.status(201).send({ comment: comment[0] });
     })
     .catch(next);
 };

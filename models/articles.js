@@ -69,12 +69,5 @@ exports.createComment = (article_id, username, body) => {
   return connection
     .insert({ article_id, author: username, body })
     .into('comments')
-    .returning('*')
-    .then(comment => {
-      return connection
-        .select('*')
-        .from('comments')
-        .where({ comment_id: comment[0].comment_id })
-        .first();
-    });
+    .returning('*');
 };
