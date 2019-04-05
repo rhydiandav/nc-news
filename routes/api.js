@@ -3,6 +3,7 @@ const topicsRouter = require('./topics');
 const articlesRouter = require('./articles');
 const commentsRouter = require('./comments');
 const usersRouter = require('./users');
+const { getAPI } = require('../controllers/api');
 const { methodNotAllowed } = require('../errors');
 
 apiRouter.use('/topics', topicsRouter);
@@ -12,7 +13,7 @@ apiRouter.use('/users', usersRouter);
 
 apiRouter
   .route('/')
-  .get((req, res) => res.send({ ok: true }))
+  .get(getAPI)
   .all(methodNotAllowed);
 
 module.exports = apiRouter;
