@@ -1,5 +1,6 @@
 const {
   fetchAllArticles,
+  createArticle,
   fetchArticleById,
   updateArticle,
   removeArticle,
@@ -35,6 +36,14 @@ exports.getAllArticles = (req, res, next) => {
           article: articles[0]
         });
       } else res.status(200).send({ total_count: +count, articles });
+    })
+    .catch(next);
+};
+
+exports.postArticle = (req, res, next) => {
+  createArticle(req.body)
+    .then(article => {
+      res.status(201).send({ article: article[0] });
     })
     .catch(next);
 };

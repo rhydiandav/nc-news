@@ -7,11 +7,13 @@ exports.up = function(connection, Promise) {
     articlesTable
       .string('topic')
       .references('slug')
-      .inTable('topics');
+      .inTable('topics')
+      .notNullable();
     articlesTable
       .string('author')
       .references('username')
-      .inTable('users');
+      .inTable('users')
+      .notNullable();
     articlesTable.date('created_at').defaultTo(connection.fn.now());
   });
 };

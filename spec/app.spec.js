@@ -187,6 +187,72 @@ describe.only('/', () => {
             expect(body.total_count).to.equal(12);
           });
       });
+      it('POST status:201 returns the posted article as an object', () => {
+        return request
+          .post('/api/articles')
+          .send({
+            title: 'Test Article',
+            body: 'This is a test article.',
+            topic: 'cats',
+            author: 'icellusedkars'
+          })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.article).to.be.an('object');
+            expect(body.article).to.have.keys(
+              'article_id',
+              'title',
+              'body',
+              'topic',
+              'author',
+              'votes',
+              'created_at'
+            );
+            expect(body.article.title).to.equal('Test Article');
+          });
+      });
+      it('POST status:404 when author is not an existing username', () => {
+        return request
+          .post('/api/articles')
+          .send({
+            title: 'Test Article',
+            body: 'This is a test article.',
+            topic: 'cats',
+            author: 'not-a-user'
+          })
+          .expect(404);
+      });
+      it('POST status:400 when author is not specified', () => {
+        return request
+          .post('/api/articles')
+          .send({
+            title: 'Test Article',
+            body: 'This is a test article.',
+            topic: 'cats'
+          })
+          .expect(400);
+      });
+      it('POST status:404 when topic is not an existing topic slug', () => {
+        return request
+          .post('/api/articles')
+          .send({
+            title: 'Test Article',
+            body: 'This is a test article.',
+            topic: 'not-a-topic',
+            author: 'icellusedkars'
+          })
+          .expect(404);
+      });
+      it('POST status:400 when author is not specified', () => {
+        return request
+          .post('/api/articles')
+          .send({
+            title: 'Test Article',
+            body: 'This is a test article.',
+            author: 'icellusedkars'
+          })
+          .expect(400);
+      });
       it('invalid method status:405', () => {
         return request
           .put('/api/articles')

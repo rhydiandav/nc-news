@@ -23,6 +23,13 @@ exports.fetchAllArticles = ({ author, topic, sort_by, order, limit, p }) => {
     });
 };
 
+exports.createArticle = ({ title, body, topic, author }) => {
+  return connection
+    .insert({ title, body, topic, author })
+    .into('articles')
+    .returning('*');
+};
+
 exports.fetchArticleById = article_id => {
   return connection
     .select(
