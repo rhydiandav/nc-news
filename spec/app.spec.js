@@ -25,6 +25,24 @@ describe.only('/', () => {
             expect(res.body.topics[0].slug).to.equal('mitch');
           });
       });
+      it('GET status:200 serves up a topic object when passed the slug as a parametric endpoint', () => {
+        return request
+          .get('/api/topics/mitch')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.topic.description).to.equal(
+              'The man, the Mitch, the legend'
+            );
+          });
+      });
+      it('GET status:404 when topic with specified slug doesnt exist', () => {
+        return request
+          .get('/api/topics/not-a-topic')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Topic 'not-a-topic' not found.");
+          });
+      });
       it('invalid method status:405', () => {
         return request
           .put('/api/topics')
