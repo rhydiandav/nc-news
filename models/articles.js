@@ -1,6 +1,6 @@
 const connection = require('../db/connection');
 
-exports.fetchAllArticles = ({ author, topic, sort_by, order }) => {
+exports.fetchAllArticles = ({ author, topic, sort_by, order, limit, p }) => {
   return connection
     .select(
       'articles.author',
@@ -18,6 +18,11 @@ exports.fetchAllArticles = ({ author, topic, sort_by, order }) => {
     .modify(query => {
       if (author) query.where({ 'articles.author': author });
       if (topic) query.where({ 'articles.topic': topic });
+      if (limit) {
+        if (!p) p = 1;
+        offset = limit * (p - 1);
+        query.limit(limit).offset(offset);
+      }
     });
 };
 

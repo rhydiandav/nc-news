@@ -146,6 +146,22 @@ describe.only('/', () => {
             expect(res.body.articles[0].topic).to.equal('cats');
           });
       });
+      it('GET status:200 should accept a limit query', () => {
+        return request
+          .get('/api/articles?limit=10')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(10);
+          });
+      });
+      it('GET status:200 should accept a p query along with the limit, which specified a start page', () => {
+        return request
+          .get('/api/articles?limit=5&p=2')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0].article_id).to.equal(6);
+          });
+      });
       it('invalid method status:405', () => {
         return request
           .put('/api/articles')
