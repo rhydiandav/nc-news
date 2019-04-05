@@ -104,7 +104,7 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.articles).to.be.an('array');
-            expect(res.body.articles.length).to.equal(11);
+            expect(res.body.articles.length).to.equal(10);
           });
       });
       it('GET status:200 when querying a topic that exists but has no articles', () => {
@@ -133,7 +133,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" group by "articles"."article_id" order by "not-a-column" desc - column "not-a-column" does not exist'
+              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" group by "articles"."article_id" order by "not-a-column" desc limit $1 - column "not-a-column" does not exist'
             );
           });
       });

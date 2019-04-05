@@ -15,14 +15,11 @@ exports.fetchAllArticles = ({ author, topic, sort_by, order, limit, p }) => {
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
     .orderBy(sort_by || 'created_at', order || 'desc')
+    .limit(limit || 10)
+    .offset((limit || 10) * (p - 1) || 0)
     .modify(query => {
       if (author) query.where({ 'articles.author': author });
       if (topic) query.where({ 'articles.topic': topic });
-      if (limit) {
-        if (!p) p = 1;
-        offset = limit * (p - 1);
-        query.limit(limit).offset(offset);
-      }
     });
 };
 
