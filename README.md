@@ -1,51 +1,30 @@
-# nc_news
+# NC News
 
-## Available Scripts
+This API interacts with the Northcoders News database.
 
-Create development and test databases locally:
+## Prerequisites
+
+For development and testing, you will need the following Node modules:
+
+- express
+- node-postgres
+- knex
+- nodemon
+- mocha
+- chai
+
+All dependencies can be installed with the following command:
 
 ```bash
-npm run setup-dbs
+npm i express pg knex nodemon mocha chai
 ```
 
-Create a new migration file:
+## Running Tests
+
+The testing script will run tests using Mocha.
+
+This can be initiated with the following command:
 
 ```bash
-npm run migrate-make <filename>
-```
-
-Run all migrations:
-
-```bash
-npm run migrate-latest
-```
-
-Rollback all migrations:
-
-```bash
-npm run migrate-rollback
-```
-
-Run tests:
-
-```bash
-npm test
-```
-
-Rollback, migrate -> latest, then start inserting data into the database:
-
-```bash
-npm run seed
-```
-
-Run the server with `nodemon`, for hot reload:
-
-```bash
-npm run dev
-```
-
-Run the server with `node`:
-
-```bash
-npm start
+npm t
 ```

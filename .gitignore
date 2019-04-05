@@ -2,3 +2,4 @@ node_modules
 knexfile.js
 .DS_Store
 testing.js
+README.old.md
