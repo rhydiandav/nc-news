@@ -154,12 +154,37 @@ describe.only('/', () => {
             expect(body.articles.length).to.equal(10);
           });
       });
-      it('GET status:200 should accept a p query along with the limit, which specified a start page', () => {
+      it('GET status:200 with a limit higher than the total number of articles should return all articles', () => {
+        return request
+          .get('/api/articles?limit=100')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(12);
+          });
+      });
+      it('GET status:200 should accept a p query which specifies a start page', () => {
         return request
           .get('/api/articles?limit=5&p=2')
           .expect(200)
           .then(({ body }) => {
             expect(body.articles[0].article_id).to.equal(6);
+          });
+      });
+      it('GET status:200 for last page should return array of only remaining articles', () => {
+        return request
+          .get('/api/articles?limit=5&p=3')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(2);
+          });
+      });
+      it('GET status:200 should return a total count of articles', () => {
+        return request
+          .get('/api/articles')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles.length).to.equal(10);
+            expect(body.total_count).to.equal(12);
           });
       });
       it('invalid method status:405', () => {

@@ -4,7 +4,8 @@ const {
   updateArticle,
   removeArticle,
   fetchComments,
-  createComment
+  createComment,
+  countArticles
 } = require('../models/articles');
 const { fetchUsers } = require('../models/users');
 const { fetchTopics } = require('../models/topics');
@@ -13,9 +14,10 @@ exports.getAllArticles = (req, res, next) => {
   Promise.all([
     fetchUsers(req.query.author),
     fetchTopics(req.query.topic),
-    fetchAllArticles(req.query)
+    fetchAllArticles(req.query),
+    countArticles()
   ])
-    .then(([user, topic, articles]) => {
+    .then(([user, topic, articles, { count }]) => {
       if (user.length === 0) {
         return Promise.reject({
           status: 404,
@@ -32,7 +34,7 @@ exports.getAllArticles = (req, res, next) => {
         res.status(200).send({
           article: articles[0]
         });
-      } else res.status(200).send({ articles });
+      } else res.status(200).send({ total_count: +count, articles });
     })
     .catch(next);
 };

@@ -73,3 +73,10 @@ exports.createComment = (article_id, username, body) => {
     .into('comments')
     .returning('*');
 };
+
+exports.countArticles = () => {
+  return connection
+    .count()
+    .from('articles')
+    .first();
+};
