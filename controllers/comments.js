@@ -1,8 +1,15 @@
 const {
+  fetchAllComments,
   fetchCommentById,
   updateComment,
   removeComment
 } = require('../models/comments');
+
+exports.getAllComments = (req, res, next) => {
+  fetchAllComments(req.query).then(comments => {
+    res.status(200).send({ comments });
+  });
+};
 
 exports.getCommentById = (req, res, next) => {
   const { comment_id } = req.params;

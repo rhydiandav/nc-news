@@ -1,5 +1,13 @@
 const connection = require('../db/connection');
 
+exports.fetchAllComments = ({ limit, p }) => {
+  return connection
+    .select('*')
+    .from('comments')
+    .limit(limit || 10)
+    .offset((limit || 10) * (p - 1) || 0);
+};
+
 exports.fetchCommentById = comment_id => {
   return connection
     .select('*')

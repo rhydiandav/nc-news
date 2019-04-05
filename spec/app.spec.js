@@ -511,6 +511,56 @@ describe.only('/', () => {
           });
       });
     });
+    describe('/comments', () => {
+      it('GET status:200 should return an array of comments', () => {
+        return request
+          .get('/api/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).to.be.an('array');
+          });
+      });
+      it('GET status:200 should accept a limit query', () => {
+        return request
+          .get('/api/comments?limit=5')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(5);
+          });
+      });
+      it('GET status:200 should limit to 10 results by default', () => {
+        return request
+          .get('/api/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(10);
+          });
+      });
+      it('GET status:200 with a limit higher than the total number of comments should return all comments', () => {
+        return request
+          .get('/api/comments?limit=100')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(18);
+          });
+      });
+      it('GET status:200 should accept a p query which specifies a start page', () => {
+        return request
+          .get('/api/comments?limit=5&p=2')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments[0].comment_id).to.equal(6);
+          });
+      });
+      it('GET status:200 for last page should return array of only remaining comments', () => {
+        return request
+          .get('/api/comments?limit=5&p=4')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(3);
+          });
+      });
+    });
     describe('/comments/:comment_id', () => {
       it('PATCH status:200 responds with updated comment, updated votes with positive number', () => {
         return request
