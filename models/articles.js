@@ -59,12 +59,14 @@ exports.removeArticle = article_id => {
     .del();
 };
 
-exports.fetchComments = (article_id, sort_by, order) => {
+exports.fetchComments = (article_id, { sort_by, order, limit, p }) => {
   return connection
     .select('comment_id', 'votes', 'created_at', 'author', 'body')
     .from('comments')
     .where({ article_id })
-    .orderBy(sort_by || 'created_at', order || 'desc');
+    .orderBy(sort_by || 'created_at', order || 'desc')
+    .limit(limit || 10)
+    .offset((limit || 10) * (p - 1) || 0);
 };
 
 exports.createComment = (article_id, username, body) => {

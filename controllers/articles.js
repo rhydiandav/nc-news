@@ -94,7 +94,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
   const { sort_by, order } = req.query;
   return Promise.all([
     fetchArticleById(article_id),
-    fetchComments(article_id, sort_by, order)
+    fetchComments(article_id, req.query)
   ])
     .then(([article, comments]) => {
       if (!article) {

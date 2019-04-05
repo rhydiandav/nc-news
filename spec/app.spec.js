@@ -353,7 +353,6 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.comments).to.be.an('array');
-            expect(res.body.comments.length).to.equal(13);
             expect(res.body.comments[0]).to.have.keys(
               'comment_id',
               'votes',
@@ -396,7 +395,6 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.comments).to.be.an('array');
-            expect(res.body.comments.length).to.equal(13);
             expect(res.body.comments[0].author).to.equal('icellusedkars');
           });
       });
@@ -406,7 +404,7 @@ describe.only('/', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal(
-              'select "comment_id", "votes", "created_at", "author", "body" from "comments" where "article_id" = $1 order by "not-a-column" desc - column "not-a-column" does not exist'
+              'select "comment_id", "votes", "created_at", "author", "body" from "comments" where "article_id" = $1 order by "not-a-column" desc limit $2 - column "not-a-column" does not exist'
             );
           });
       });
@@ -416,8 +414,39 @@ describe.only('/', () => {
           .expect(200)
           .then(res => {
             expect(res.body.comments).to.be.an('array');
-            expect(res.body.comments.length).to.equal(13);
             expect(res.body.comments[0].author).to.equal('butter_bridge');
+          });
+      });
+      it('GET status:200 should accept a limit query', () => {
+        return request
+          .get('/api/articles/1/comments?limit=10')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(10);
+          });
+      });
+      it('GET status:200 with a limit higher than the total number of articles should return all comments', () => {
+        return request
+          .get('/api/articles/1/comments?limit=100')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(13);
+          });
+      });
+      it('GET status:200 should accept a p query which specifies a start page', () => {
+        return request
+          .get('/api/articles/1/comments?sort_by=&limit=5&p=2')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments[0].comment_id).to.equal(7);
+          });
+      });
+      it('GET status:200 for last page should return array of only remaining articles', () => {
+        return request
+          .get('/api/articles/1/comments?limit=5&p=3')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.equal(3);
           });
       });
       it('POST status:201 returns the posted comment as an object', () => {
