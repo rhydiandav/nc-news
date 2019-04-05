@@ -15,7 +15,7 @@ exports.getAllArticles = (req, res, next) => {
     fetchUsers(req.query.author),
     fetchTopics(req.query.topic),
     fetchAllArticles(req.query),
-    countArticles()
+    countArticles(req.query)
   ])
     .then(([user, topic, articles, { count }]) => {
       if (user.length === 0) {

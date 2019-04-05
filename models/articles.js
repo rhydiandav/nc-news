@@ -74,9 +74,13 @@ exports.createComment = (article_id, username, body) => {
     .returning('*');
 };
 
-exports.countArticles = () => {
+exports.countArticles = ({ author, topic }) => {
   return connection
     .count()
     .from('articles')
+    .modify(query => {
+      if (author) query.where({ 'articles.author': author });
+      if (topic) query.where({ 'articles.topic': topic });
+    })
     .first();
 };
