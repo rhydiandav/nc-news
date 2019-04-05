@@ -8,3 +8,10 @@ exports.fetchTopics = slug => {
       if (slug) query.where({ slug });
     });
 };
+
+exports.createTopic = ({ slug, description }) => {
+  return connection
+    .insert({ slug, description })
+    .into('topics')
+    .returning('*');
+};

@@ -43,6 +43,28 @@ describe.only('/', () => {
             expect(body.msg).to.equal("Topic 'not-a-topic' not found.");
           });
       });
+      it('POST status:201 returns the posted topic as an object', () => {
+        return request
+          .post('/api/topics')
+          .send({ slug: 'test', description: 'Test Topic' })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.topic.slug).to.equal('test');
+            expect(body.topic.description).to.equal('Test Topic');
+          });
+      });
+      it('POST status:400 if slug isnt specified', () => {
+        return request
+          .post('/api/topics')
+          .send({ description: 'Test Topic' })
+          .expect(400);
+      });
+      it('POST status:400 if description isnt specified', () => {
+        return request
+          .post('/api/topics')
+          .send({ slug: 'test' })
+          .expect(400);
+      });
       it('invalid method status:405', () => {
         return request
           .put('/api/topics')
@@ -741,8 +763,58 @@ describe.only('/', () => {
           });
       });
     });
+    describe('/users', () => {
+      it('GET status:200 should serve up an array of user objects', () => {
+        return request
+          .get('/api/users')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.users).to.be.an('array');
+            expect(body.users[0].username).to.equal('butter_bridge');
+          });
+      });
+      it('POST status:201 response with the new user object', () => {
+        return request
+          .post('/api/users')
+          .send({
+            username: 'testuser',
+            avatar_url: 'http://www.test.com/user.jpg',
+            name: 'test user'
+          })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.user.username).to.equal('testuser');
+          });
+      });
+      it('POST status:400 if no username is specified', () => {
+        return request
+          .post('/api/users')
+          .send({
+            avatar_url: 'http://www.test.com/user.jpg',
+            name: 'test user'
+          })
+          .expect(400);
+      });
+      it('POST status:400 if no name is specified', () => {
+        return request
+          .post('/api/users')
+          .send({
+            username: 'testuser',
+            avatar_url: 'http://www.test.com/user.jpg'
+          })
+          .expect(400);
+      });
+      it('invalid method status:405', () => {
+        return request
+          .put('/api/users')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Method Not Allowed');
+          });
+      });
+    });
     describe('/users/:username', () => {
-      it('GET status:200 should serve up a username object', () => {
+      it('GET status:200 should serve up a user object', () => {
         return request
           .get('/api/users/icellusedkars')
           .expect(200)

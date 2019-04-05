@@ -5,7 +5,7 @@ exports.up = function(connection, Promise) {
       .primary()
       .notNullable();
     usersTable.string('avatar_url');
-    usersTable.string('name');
+    usersTable.string('name').notNullable();
   });
 };
 
