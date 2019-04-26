@@ -33,6 +33,7 @@ exports.getAllArticles = (req, res, next) => {
       }
       if (articles.length === 1) {
         res.status(200).send({
+          total_count: +count,
           article: articles[0]
         });
       } else res.status(200).send({ total_count: +count, articles });
