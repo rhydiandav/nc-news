@@ -292,6 +292,7 @@ describe.only('/', () => {
           .then(res => {
             expect(res.body.article).to.be.an('object');
             expect(res.body.article.article_id).to.equal(1);
+            expect(typeof res.body.article.comment_count).to.equal('number');
           });
       });
       it('GET status:404 for article number that is valid but doesnt exist', () => {

@@ -59,6 +59,7 @@ exports.getArticleById = (req, res, next) => {
           msg: `no article found for article_id ${article_id}`
         });
       }
+      article.comment_count = +article.comment_count;
       res.status(200).send({ article });
     })
     .catch(next);
