@@ -13,6 +13,7 @@ exports.up = function(connection, Promise) {
       .string('author')
       .references('username')
       .inTable('users')
+      .onDelete('CASCADE')
       .notNullable();
     articlesTable.date('created_at').defaultTo(connection.fn.now());
   });

@@ -796,6 +796,17 @@ describe.only('/', () => {
             expect(body.msg).to.equal('User not-a-username does not exist');
           });
       });
+      it('DELETE status:204 will remove specified user', () => {
+        return request
+          .delete('/api/users/icellusedkars')
+          .expect(204)
+          .then(res => {
+            expect(res.body).to.eql({});
+          })
+          .then(() => {
+            return request.get('/api/users/icellusedkars').expect(404);
+          });
+      });
       it('invalid method status:405', () => {
         return request
           .put('/api/users/icellusedkars')

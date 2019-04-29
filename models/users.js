@@ -15,3 +15,11 @@ exports.createUser = ({ username, avatar_url, name }) => {
     .into('users')
     .returning('*');
 };
+
+exports.removeUser = username => {
+  return connection
+    .select('*')
+    .from('users')
+    .where({ username })
+    .del();
+};
