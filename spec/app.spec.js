@@ -306,14 +306,7 @@ describe.only('/', () => {
           });
       });
       it('GET status:400 for article with invalid id', () => {
-        return request
-          .get('/api/articles/invalid-id')
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).to.equal(
-              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "invalid-id"'
-            );
-          });
+        return request.get('/api/articles/invalid-id').expect(400);
       });
       it('PATCH status:200 with article id should return updated article as an object', () => {
         return request
@@ -350,12 +343,7 @@ describe.only('/', () => {
         return request
           .patch('/api/articles/not-an-id')
           .send({ inc_votes: 1 })
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).to.equal(
-              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "not-an-id"'
-            );
-          });
+          .expect(400);
       });
       it('PATCH status:200 will return unaltered article when no inc_votes in body', () => {
         return request
@@ -372,12 +360,7 @@ describe.only('/', () => {
         return request
           .patch('/api/articles/1')
           .send({ inc_votes: 'not-a-number' })
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).to.equal(
-              'update "articles" set "votes" = "votes" + $1 where "article_id" = $2 returning * - invalid input syntax for integer: "NaN"'
-            );
-          });
+          .expect(400);
       });
       it('PATCH status:200 should return updated article when req body contains unused properties', () => {
         return request
@@ -417,14 +400,7 @@ describe.only('/', () => {
           });
       });
       it('DELETE status:400 for invalid article id', () => {
-        return request
-          .delete('/api/articles/not-an-article')
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).to.equal(
-              'delete from "articles" where "article_id" = $1 - invalid input syntax for integer: "not-an-article"'
-            );
-          });
+        return request.delete('/api/articles/not-an-article').expect(400);
       });
       it('invalid method status:405', () => {
         return request
@@ -469,14 +445,7 @@ describe.only('/', () => {
           });
       });
       it('GET status:400 for invalid article id', () => {
-        return request
-          .get('/api/articles/not-an-article/comments')
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).to.equal(
-              'select "articles"."author", "articles"."title", "articles"."article_id", "articles"."body", "articles"."topic", "articles"."created_at", "articles"."votes", count("comments"."article_id") as "comment_count" from "articles" left join "comments" on "articles"."article_id" = "comments"."article_id" where "articles"."article_id" = $1 group by "articles"."article_id" limit $2 - invalid input syntax for integer: "not-an-article"'
-            );
-          });
+        return request.get('/api/articles/not-an-article/comments').expect(400);
       });
       it('GET status:200 should allow sort_by query', () => {
         return request
@@ -710,12 +679,7 @@ describe.only('/', () => {
         return request
           .patch('/api/comments/invalid-id')
           .send({ inc_votes: 1 })
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).to.equal(
-              'select * from "comments" where "comment_id" = $1 limit $2 - invalid input syntax for integer: "invalid-id"'
-            );
-          });
+          .expect(400);
       });
       it('PATCH status:404 for comment that doesnt exist', () => {
         return request
